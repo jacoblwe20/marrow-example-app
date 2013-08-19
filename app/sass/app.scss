@@ -1,0 +1,79 @@
+@import 'lib/purecss';
+
+$grey : #ddd;
+$gray : #efefef;
+$white : #fefefe;
+
+body{
+	background: $grey;
+}
+
+.bugz-app{
+	max-width: 500px;
+	margin: 20px auto;
+	background: $white;
+	border-radius: 5px;
+	overflow: hidden;
+	box-shadow: 0 0 10px rgba( 0, 0, 0, .15 );
+} 
+
+header.bugz-header.pure-menu{
+	background: $gray;
+	border-bottom: 1px solid $grey;
+	ul{
+		height: 3.5em;
+		line-height: 3.5em;
+		width: 100%;
+		li{
+			padding: 0 20px;
+		}
+		.right{
+			float: right;
+		}
+	}	
+}
+article{
+	form.pure-form{
+		overflow: hidden;
+		height: 0;
+		max-height: 0px;
+		margin: 0px;
+		input, textarea{
+			min-width: 100%;
+		}
+		textarea{
+			min-height: 100px;
+		}
+		button{
+			float: right;
+		}
+		&.show{
+			max-height: 300px;
+			height: auto;
+			margin: 20px;
+		}
+	}
+	ul{
+		list-style-type: none;
+		padding: 0;
+		li{
+			padding: 10px 20px;
+			border-bottom: 1px solid $gray;
+			p{
+				padding: 5px 20px 0 0;
+				font-size: 14px;
+			}
+			button{
+				min-width: 100%;
+				margin: 10px 10px 0;
+			}
+			
+		}
+	}
+}
+
+footer{
+	text-align: center;
+	color: $grey;
+	font-size: 12px;
+}
