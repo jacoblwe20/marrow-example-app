@@ -963,6 +963,11 @@ article ul {
     article ul li button {
       min-width: 100%;
       margin: 10px 10px 0; }
+    article ul li.done {
+      color: #fefefe;
+      background: #0078e7; }
+      article ul li.done p, article ul li.done button {
+        display: none; }
 
 footer {
   text-align: center;

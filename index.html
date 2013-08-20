@@ -38,12 +38,30 @@
 	</footer>
 </div>
 <script>
-	;( function ( app, exports ) { 
+	;( function ( app, exports ) {
 		var form = new app.Form( $('.bugz-form') );
 		var navBar = new app.NavBar( $('.bugz-header') );
 		var list = new app.List( $('.bugz-list') );
+		Debug().listenTo( 'app:App' ); 
 
 		app.start($('[data-app]'));
+		app.load([
+			{
+				id: 1,
+				title: 'Hello',
+				body: 'World'
+			},
+			{
+				id: 1,
+				title: 'Hello',
+				body: 'World'
+			},
+			{
+				id: 1,
+				title: 'Hello',
+				body: 'World'
+			}
+		]);
 
 	} ( app, this ) );
 </script>

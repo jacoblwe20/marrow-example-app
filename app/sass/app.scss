@@ -3,6 +3,7 @@
 $grey : #ddd;
 $gray : #efefef;
 $white : #fefefe;
+$blue : #0078e7;
 
 body{
 	background: $grey;
@@ -66,6 +67,14 @@ article{
 			button{
 				min-width: 100%;
 				margin: 10px 10px 0;
+			}
+
+			&.done{
+				color: $white;
+				background: $blue;
+				p, button{
+					display: none;
+				}
 			}
 			
 		}
