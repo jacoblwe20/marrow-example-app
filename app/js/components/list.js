@@ -28,7 +28,9 @@ var app = app || {};
 					//clear list
 					_this.$el.empty( );
 					for ( var i = 0; i < collection.length; i ++ ) {
-						app.emit( 'bug:add', collection[ i ] );
+						if ( collection[ i ] ) {
+							app.emit( 'bug:add', collection[ i ] );
+						}
 					}
 				})
 			
@@ -36,9 +38,10 @@ var app = app || {};
 			}, {
 				addBug: function ( obj ) {
 					debug.log( 'addBug', obj );
-					obj.id = obj.id || +new Date( );
-					var item = new app.Bug( this._listItem.clone( ), obj );
-					this.$el.prepend( item.$el );
+					if ( /(open|all)/.test( app.filter ) || app.filter === obj.status ) {
+						var item = new app.Bug( this._listItem.clone( ), obj );
+						this.$el.prepend( item.$el );
+					}
 				},
 				reorderList: function ( ) {
 					

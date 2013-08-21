@@ -9,6 +9,15 @@
 			<li>
 				<span>Bugz</span>
 			</li>
+			<li>
+				<a data-filter='open'>Open</a>
+			</li>
+			<li>
+				<a data-filter='done'>Done</a>
+			</li>
+			<li class="active">
+				<a data-filter='all'>All</a>
+			</li>
 			<li class='right'>
 				<button class='pure-button pure-button-primary'>
 					<i class="icon-plus"> + </i>
@@ -24,6 +33,7 @@
 				<label for='body'>Description</label>
 				<textarea id='body'></textarea>
 				<button class="pure-button">Submit</button>
+				<a class="close">Close</a>
 			</fieldset>
 		</form>
 		<ul class="bugz-list">
@@ -42,22 +52,25 @@
 		var form = new app.Form( $('.bugz-form') );
 		var navBar = new app.NavBar( $('.bugz-header') );
 		var list = new app.List( $('.bugz-list') );
-		Debug().listenTo( 'app:App' ); 
+		Debug().listenTo( 'app:NavBar' ); 
 
-		app.start($('[data-app]'));
+		app.start( $('[data-app]') );
 		app.load([
 			{
+				status: 'open',
 				id: 1,
 				title: 'Hello',
 				body: 'World'
 			},
 			{
-				id: 1,
+				status: 'done',
+				id: 2,
 				title: 'Hello',
 				body: 'World'
 			},
 			{
-				id: 1,
+				status: 'open',
+				id: 3,
 				title: 'Hello',
 				body: 'World'
 			}

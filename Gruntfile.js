@@ -12,6 +12,7 @@ module.exports = function(grunt) {
 					'app/js/libs/marrow.min.js',
 					'app/js/libs/marrow-debug.min.js',
 					"app/js/app.js",	
+					"app/js/DS.js",
 					"app/js/components/**/*.js"				
 				],
 				dest : 'js/app.js'

@@ -26,7 +26,18 @@ header.bugz-header.pure-menu{
 		line-height: 3.5em;
 		width: 100%;
 		li{
-			padding: 0 20px;
+			&:first-child, &:last-child{
+				padding: 0 20px;
+			}
+			&.active{
+				background: $blue;
+				a{
+					&:hover{
+						background: $blue;
+					}
+					color: #fff;
+				}
+			}
 		}
 		.right{
 			float: right;

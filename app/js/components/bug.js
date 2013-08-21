@@ -20,8 +20,12 @@ var app = app || {};
 				this.$body = this.$el
 					.find('p')
 					.text( data.body );
+				this.$el.addClass( data.status );
 
 				this.$complete.on( 'click', function ( ) {
+					if ( app.filter === 'open' ) {
+						_this.$el.remove();
+					}
 					_this.done( );
 				})
 

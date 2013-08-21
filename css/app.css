@@ -931,8 +931,14 @@ header.bugz-header.pure-menu {
     height: 3.5em;
     line-height: 3.5em;
     width: 100%; }
-    header.bugz-header.pure-menu ul li {
+    header.bugz-header.pure-menu ul li:first-child, header.bugz-header.pure-menu ul li:last-child {
       padding: 0 20px; }
+    header.bugz-header.pure-menu ul li.active {
+      background: #0078e7; }
+      header.bugz-header.pure-menu ul li.active a {
+        color: white; }
+        header.bugz-header.pure-menu ul li.active a:hover {
+          background: #0078e7; }
     header.bugz-header.pure-menu ul .right {
       float: right; }
 

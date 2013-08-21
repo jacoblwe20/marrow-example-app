@@ -1,4 +1,4 @@
-/* marrow-example-app - 0.0.1 1376973793486 */
+/* marrow-example-app - 0.0.1 1377057639569 */
 
 
 /*
@@ -28,40 +28,33 @@ var app;
 		debug = Debug( 'app:App' ),
 		App = Marrow( 
 			function App( ){
+				var _this = this;
 				this.count = 0;
-				this.on( 'bug', function ( event ) {
-					console.log('bug', event)
+				this.filter = 'all';
+				this.on( 'bug', function ( event, payload ) {
+					console.log('bug', event, payload)
 					if ( /:add/.test( event ) ) {
-						this.count += 1;
+						_this.count += 1;
+						_this.DS._store( payload );
 					} else if ( /:remove/.test( event ) ) {
-						this.count -= 1;
+						_this.count -= 1;
+						_this.DS._updateStatus( 'done', payload );
+					} else if ( /:done/.test( event ) ) {
+						_this.count -= 1;
+						_this.DS._updateStatus( 'done', payload );
 					} else if ( /:load/.test( event ) ) {
 						// reset count
-						this.count = 0;
+						_this.count = 0;
 					}
 					this.updateCount( );
+				} );
+				this.on( 'list:filter', function ( filter ) {
+					debug.log( 'filter', filter );
+					if ( filter ) {
+						_this.DS._find( filter );
+					}
 				} )
 			}, {
-				_store: function ( obj ) {
-					if ( typeof obj === 'object' ) {
-						var name = 'open:' + ( obj || 1 );
-						DS[ name ] = obj;
-					}
-				},
-				_find: function ( state ) {
-					var collection = [];
-					for ( var key in DS ) {
-						if ( new RegExp( '^' + state + ':' ).test( key ) ) {
-							collection.push( DS[ key ] );
-						}
-					}
-					// load data
-					this.emit( 'bug:load', collection );
-				},
-				load: function ( payload ) {
-					debug.log( 'load', payload );
-					this.emit( 'bug:load', payload );
-				},
 				updateCount: function ( ) {
 					this.$count.text( this.count );
 				},
@@ -74,6 +67,9 @@ var app;
 				start: function ( $el ) {
 					this.$el = $el;
 					this.$count = this.$el.find( '.bug-count' );
+				},
+				load: function( ){
+					this.DS.load.apply( this.DS, arguments );
 				}
 			}
 		);
@@ -81,6 +77,70 @@ var app;
 	app = new App( );
 
 } ( Marrow ) );
+var app = app || {};
+
+;( function ( Marrow, exports ) { 
+	'use strict';
+
+	var debug = Debug( 'app:DS' ),
+		DS = {},
+		DataStore = Marrow( 
+			function DataStore( ){
+				
+			},{
+				_store: function ( obj ) {
+					if ( typeof obj === 'object' ) {
+						var name = obj.status + ':' + ( obj.id || 1 );
+						DS[ name ] = obj;
+					}
+				},
+				_updateStatus: function ( status, id ) {
+					debug.log( status, id );
+					if( DS[ 'open:' + id ] ){
+						DS[ 'open:' + id ].status = status;
+						DS[ status + ':' + id ] = DS[ 'open:' + id ];
+						DS[ 'open:' + id ] = null;
+					}
+				},
+				_readAll: function ( ) {
+					return DS;
+				},
+				_find: function ( state ) {
+					var collection = [];
+					app.filter = state;
+					if ( state ){			
+						for ( var key in DS ) {
+							if ( 
+								new RegExp( '^' + app.filter + ':' ).test( key ) || 
+								app.filter === 'all' 
+							) {
+								collection.push( DS[ key ] );
+							}
+						}
+					}
+					// load data
+					app.emit( 'bug:load', collection );
+				},
+				load: function ( payload ) {
+					debug.log( 'load', payload );
+					app.emit( 'bug:load', payload );
+				},
+				del: function ( id ) {
+					if ( id ){			
+						for ( var key in DS ) {
+							if ( new RegExp( ':' + id ).test( key ) || app.filter === 'all' ) {
+								delete DS[ key ];
+							}
+						}
+					}
+				}
+			}
+		);
+
+	app.DS = new DataStore( );
+	exports.DS = DS
+
+} ( Marrow, this ) );
 var app = app || {};
 
 ;( function ( Marrow ) { 
@@ -103,8 +163,12 @@ var app = app || {};
 				this.$body = this.$el
 					.find('p')
 					.text( data.body );
+				this.$el.addClass( data.status );
 
 				this.$complete.on( 'click', function ( ) {
+					if ( app.filter === 'open' ) {
+						_this.$el.remove();
+					}
 					_this.done( );
 				})
 
@@ -133,11 +197,16 @@ var app = app || {};
 			this.$title = this.$el.find( '#title' );
 			this.$body = this.$el.find( '#body' );
 			this.$submit = this.$el.find( 'button' );
+			this.$close = this.$el.find( '.close' );
 
 			this.$submit.on( 'click', function ( e ) {
 				e.preventDefault( );
 				_this.addBug( );
 			});
+
+			this.$close.on( 'click', function ( ) {
+				app.emit( 'form:close' );
+			} )
 
 			app.on( 'form:open', function ( ) {
 				_this.$el.addClass( 'show' );
@@ -159,10 +228,13 @@ var app = app || {};
 
 				if ( title.length && body.length ) {
 					app.emit( 'bug:add', {
+						status: 'open',
+						id: +new Date( ),
 						title: title,
 						body: body
 					});
 					this.clearForm( );
+					app.emit( 'form:close' );
 				} else {
 					app.emit( 'error', 'Your bug has bugz' );
 					this.showErrors( title, body )
@@ -207,7 +279,9 @@ var app = app || {};
 					//clear list
 					_this.$el.empty( );
 					for ( var i = 0; i < collection.length; i ++ ) {
-						app.emit( 'bug:add', collection[ i ] );
+						if ( collection[ i ] ) {
+							app.emit( 'bug:add', collection[ i ] );
+						}
 					}
 				})
 			
@@ -215,9 +289,10 @@ var app = app || {};
 			}, {
 				addBug: function ( obj ) {
 					debug.log( 'addBug', obj );
-					obj.id = obj.id || +new Date( );
-					var item = new app.Bug( this._listItem.clone( ), obj );
-					this.$el.prepend( item.$el );
+					if ( /(open|all)/.test( app.filter ) || app.filter === obj.status ) {
+						var item = new app.Bug( this._listItem.clone( ), obj );
+						this.$el.prepend( item.$el );
+					}
 				},
 				reorderList: function ( ) {
 					
@@ -233,22 +308,44 @@ var app = app || {};
 ;( function ( Marrow ) { 
 	'use strict';
 
-	var NavBar = Marrow( 
-		function NavBar( $bar ){
-			var _this = this;
-			this.$el = $bar;
-			this.$button = this.$el.find('button');
-			this.$button.on( 'click', function ( ) {
-				app.emit( 'form:open' );
-				_this.$button.attr({
-					'disabled': 'disabled'
-				})
-				app.once( 'form:close', function ( ) {
-					_this.$button.removeAttr('disabled')
-				} )	
-			});
-		}
-	);
+	var debug = Debug( 'app:NavBar' ),
+		NavBar = Marrow( 
+				function NavBar( $bar ){
+					var _this = this;
+					this.$el = $bar;
+					this.$button = this.$el.find( 'button' );
+					this.$links = this.$el.find( 'a' );
+
+					this.$links.on( 'click', function ( e ) {
+						var $el = $(e.target),
+							filter = $el.data( 'filter' );
+
+						debug.log( 'link:click', $el, filter );
+						_this._removeActive( );
+						$el.closest('li')
+							.addClass('active');
+						app.emit( 'list:filter', filter );
+
+					} )
+
+					this.$button.on( 'click', function ( ) {
+						app.emit( 'form:open' );
+						_this.$button.attr({
+							'disabled': 'disabled'
+						})
+						app.once( 'form:close', function ( ) {
+							_this.$button.removeAttr( 'disabled' )
+						} )	
+					});
+				}, {
+					_removeActive: function ( ) {
+						this.$links.each( function ( ) {
+							$(this).closest('li')
+								.removeClass('active');
+						} )
+					}
+				}
+			);
 
 	app.NavBar = NavBar;
 
