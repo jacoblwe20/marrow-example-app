@@ -1,4 +1,4 @@
-/* marrow-example-app - 0.0.1 1377057639569 */
+/* marrow-example-app - 0.0.1 1377058718709 */
 
 
 /*
@@ -39,9 +39,11 @@ var app;
 					} else if ( /:remove/.test( event ) ) {
 						_this.count -= 1;
 						_this.DS._updateStatus( 'done', payload );
-					} else if ( /:done/.test( event ) ) {
+					} else if ( /:done|:del/.test( event ) ) {
 						_this.count -= 1;
-						_this.DS._updateStatus( 'done', payload );
+						debug.log( event );
+						_this.DS._updateStatus( event.split(':')[1], payload );
+
 					} else if ( /:load/.test( event ) ) {
 						// reset count
 						_this.count = 0;
@@ -95,6 +97,10 @@ var app = app || {};
 					}
 				},
 				_updateStatus: function ( status, id ) {
+					if ( status === 'del' ) {
+						this._del( id );
+						return null;
+					}
 					debug.log( status, id );
 					if( DS[ 'open:' + id ] ){
 						DS[ 'open:' + id ].status = status;
@@ -125,10 +131,10 @@ var app = app || {};
 					debug.log( 'load', payload );
 					app.emit( 'bug:load', payload );
 				},
-				del: function ( id ) {
+				_del: function ( id ) {
 					if ( id ){			
 						for ( var key in DS ) {
-							if ( new RegExp( ':' + id ).test( key ) || app.filter === 'all' ) {
+							if ( new RegExp( ':' + id ).test( key ) ) {
 								delete DS[ key ];
 							}
 						}
@@ -170,6 +176,10 @@ var app = app || {};
 						_this.$el.remove();
 					}
 					_this.done( );
+				});
+
+				this.$del.on( 'click', function ( ) {
+					_this.del( );
 				})
 
 				// bind buttons
@@ -178,6 +188,19 @@ var app = app || {};
 					// change look to be done
 					app.emit( 'bug:done', this.data.id );
 					this.$el.addClass( 'done' );
+				},
+				del: function ( ) {
+					var _confirm = confirm( 
+						'Are you sure you want to delete, "' + 
+						this.data.title + 
+						'"' 
+					);
+
+					if ( _confirm ) {
+						app.emit( 'bug:del', this.data.id );
+						this.$el.remove( );
+					}
+
 				}
 			}
 		);
@@ -293,9 +316,6 @@ var app = app || {};
 						var item = new app.Bug( this._listItem.clone( ), obj );
 						this.$el.prepend( item.$el );
 					}
-				},
-				reorderList: function ( ) {
-					
 				}
 			}
 		);

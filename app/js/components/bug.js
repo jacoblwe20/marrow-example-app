@@ -27,6 +27,10 @@ var app = app || {};
 						_this.$el.remove();
 					}
 					_this.done( );
+				});
+
+				this.$del.on( 'click', function ( ) {
+					_this.del( );
 				})
 
 				// bind buttons
@@ -35,6 +39,19 @@ var app = app || {};
 					// change look to be done
 					app.emit( 'bug:done', this.data.id );
 					this.$el.addClass( 'done' );
+				},
+				del: function ( ) {
+					var _confirm = confirm( 
+						'Are you sure you want to delete, "' + 
+						this.data.title + 
+						'"' 
+					);
+
+					if ( _confirm ) {
+						app.emit( 'bug:del', this.data.id );
+						this.$el.remove( );
+					}
+
 				}
 			}
 		);

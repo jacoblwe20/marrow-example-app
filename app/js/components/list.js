@@ -42,9 +42,6 @@ var app = app || {};
 						var item = new app.Bug( this._listItem.clone( ), obj );
 						this.$el.prepend( item.$el );
 					}
-				},
-				reorderList: function ( ) {
-					
 				}
 			}
 		);

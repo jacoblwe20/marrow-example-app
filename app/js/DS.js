@@ -16,6 +16,10 @@ var app = app || {};
 					}
 				},
 				_updateStatus: function ( status, id ) {
+					if ( status === 'del' ) {
+						this._del( id );
+						return null;
+					}
 					debug.log( status, id );
 					if( DS[ 'open:' + id ] ){
 						DS[ 'open:' + id ].status = status;
@@ -46,10 +50,10 @@ var app = app || {};
 					debug.log( 'load', payload );
 					app.emit( 'bug:load', payload );
 				},
-				del: function ( id ) {
+				_del: function ( id ) {
 					if ( id ){			
 						for ( var key in DS ) {
-							if ( new RegExp( ':' + id ).test( key ) || app.filter === 'all' ) {
+							if ( new RegExp( ':' + id ).test( key ) ) {
 								delete DS[ key ];
 							}
 						}

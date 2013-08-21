@@ -17,9 +17,11 @@ var app;
 					} else if ( /:remove/.test( event ) ) {
 						_this.count -= 1;
 						_this.DS._updateStatus( 'done', payload );
-					} else if ( /:done/.test( event ) ) {
+					} else if ( /:done|:del/.test( event ) ) {
 						_this.count -= 1;
-						_this.DS._updateStatus( 'done', payload );
+						debug.log( event );
+						_this.DS._updateStatus( event.split(':')[1], payload );
+
 					} else if ( /:load/.test( event ) ) {
 						// reset count
 						_this.count = 0;
