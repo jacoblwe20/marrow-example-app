@@ -10,14 +10,12 @@ var app = app || {};
 				this.$el = $list;
 
 				this._listItem = $(' <li/> ').append(
-					'<div class="pure-u-2-3">' +
+					'<div class="pure-u-7-8">' +
 						'<h3></h3>' +
 						'<p></p>' +
 					'</div>' +
-					'<div class="pure-u-1-3 actions">' +
-						'<button class="pure-button bug-delete">Delete</button>' +
-						'<button class="pure-button pure-button-primary bug-complete">Done</button>' +
-					'</div>' 
+					'<a class="bug-delete">⨯</a>' +
+					'<button class="pure-button pure-button-primary bug-complete">Done</button>'
 				);
 
 				app.on( 'bug:add', function( ){

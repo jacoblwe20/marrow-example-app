@@ -1,89 +1,180 @@
 @import 'lib/purecss';
+@import url(http://fonts.googleapis.com/css?family=Roboto);
 
+$ltGrey: #f2f2f2;
 $grey : #ddd;
-$gray : #efefef;
+$gray : #e6e6e6;
+$dkGrey : #c4c4c4;
+$black: #444;
 $white : #fefefe;
 $blue : #0078e7;
 
 body{
-	background: $grey;
+	font-family: 'Roboto';
+	background: $ltGrey;
+	color: $black;
+}
+
+.right{
+	float: right;
 }
 
 .bugz-app{
-	max-width: 500px;
-	margin: 20px auto;
+	max-width: 30em;
+	margin: 1em auto;
 	background: $white;
-	border-radius: 5px;
 	overflow: hidden;
-	box-shadow: 0 0 10px rgba( 0, 0, 0, .15 );
+	box-shadow: 0 .25em .25em rgba( 0, 0, 0, .15 );
 } 
 
-header.bugz-header.pure-menu{
-	background: $gray;
-	border-bottom: 1px solid $grey;
-	ul{
-		height: 3.5em;
-		line-height: 3.5em;
+.menu-link{
+	position: relative;
+	max-width: 90%;
+	min-width: 10em;
+	padding: 1em 1.5em;
+	display: inline-block;
+	background: $dkGrey;
+	color: #fff;
+	border: 0;
+	outline: none;
+	.menu-list{
+		max-height: 0px;
+		height: 0;
+		overflow: hidden;
 		width: 100%;
+		top: 100%;
+		position: absolute;
+		box-shadow: 0px .1em .3em rgba( 0, 0, 0, .3 );
+		z-index: 5;
+		list-style-type: none;
+		background: $white;
+		padding: 0;
+		margin: 0;
 		li{
-			&:first-child, &:last-child{
-				padding: 0 20px;
-			}
-			&.active{
-				background: $blue;
-				a{
-					&:hover{
-						background: $blue;
-					}
-					color: #fff;
-				}
+			color: $black;
+			display: block;
+			float: none;
+			padding: .75em 1em;
+			&:hover{
+				background: $ltGrey;
 			}
 		}
-		.right{
-			float: right;
+		&.show{
+			max-height: 999px;
+			height: auto;
 		}
-	}	
+	}
+	&:after{
+		position: absolute;
+		right: 1.5em;
+		top: 1em;
+		content: "\25BC";
+
+	}
+}
+
+
+header.bugz-header{
+	background: $gray;
+	.bug-counter{
+		p{
+			padding: 0 1.5em 0 0;
+			display: inline-block;
+			color: $dkGrey;
+			text-align: right;
+		}
+		text-align: right;
+	}
 }
 article{
 	form.pure-form{
-		overflow: hidden;
-		height: 0;
-		max-height: 0px;
+
 		margin: 0px;
-		input, textarea{
-			min-width: 100%;
+		&.show{
+			max-height: 300px;
+			height: auto;
+			padding: 1.5em;
+			border-bottom: 1px solid $dkGrey;
+			position: relative;
+			textarea{
+				padding: 1.5em!important;
+				height: auto;
+				min-height: 100%!important;
+				border-width: 1px;
+				margin: 2em 0!important;
+			}
+			button, .close{
+				opacity: 1;
+				display: inline-block;
+			}
+		}
+
+		fieldset{
+			padding: 0;
+		}
+		input{
+			padding: 1.5em!important;
 		}
 		textarea{
-			min-height: 100px;
+			padding: 0!important;
+			height: 0;
+			min-height: 0px!important;
+			border-width: 0px;
+		}
+		input, textarea{
+			min-width: 100%;
+			margin: 0!important;
+			border-radius: 0!important;
+		}
+		textarea{
+			min-height: 2em;
 		}
 		button{
 			float: right;
 		}
-		&.show{
-			max-height: 300px;
-			height: auto;
-			margin: 20px;
+		button, .close{
+			opacity: 0;
+			display: none;
 		}
 	}
 	ul{
 		list-style-type: none;
 		padding: 0;
+		margin: 0;
 		li{
-			padding: 10px 20px;
-			border-bottom: 1px solid $gray;
+			border-left: .5em solid $blue;
+			padding: 1.5em!important;
+			border-bottom: 1px solid $blue;
+			position: relative;
+			h3, p{
+				padding: .5em 0;
+				margin: 0;
+			}
+			h3{
+				font-size: 1.5em;
+			}
 			p{
-				padding: 5px 20px 0 0;
-				font-size: 14px;
+				font-size: 1em;
 			}
 			button{
-				min-width: 100%;
-				margin: 10px 10px 0;
+				position: absolute;
+				bottom: 1em;
+				right: 1em;
+				//font-size: 2em;
 			}
 
+			.bug-delete{
+				position: absolute;
+				top: 1em;
+				right: 1em;
+				font-size: 2em;
+			}
 			&.done{
-				color: $white;
-				background: $blue;
-				p, button{
+				border-left: .5em solid $dkGrey;
+				border-bottom: 1px solid $dkGrey;
+				color: $grey;
+				background: $ltGrey;
+				p, .bug-complete{
 					display: none;
 				}
 			}
@@ -95,5 +186,10 @@ article{
 footer{
 	text-align: center;
 	color: $grey;
-	font-size: 12px;
+	font-size: .75em;
+	padding: .75em;
+	a{
+		color: $blue;
+		text-decoration: none;
+	}
 }

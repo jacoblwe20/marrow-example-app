@@ -4,34 +4,23 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src='/js/app.js'></script>
 <div data-app="bugz" class="bugz-app">
-	<header class='pure-menu pure-menu-open pure-menu-horizontal bugz-header'>
-		<ul>
-			<li>
-				<span>Bugz</span>
-			</li>
-			<li>
-				<a data-filter='open'>Open</a>
-			</li>
-			<li>
-				<a data-filter='done'>Done</a>
-			</li>
-			<li class="active">
-				<a data-filter='all'>All</a>
-			</li>
-			<li class='right'>
-				<button class='pure-button pure-button-primary'>
-					<i class="icon-plus"> + </i>
-				</button>
-			</li>
-		</ul>
+	<header class='bugz-header pure-g'>
+		<div class="pure-u-2-3">
+			<div class="filter"></div>
+		</div>
+		<div class="pure-u-1-3 bug-counter">
+			<p> 
+				<em>
+					<span class='bug-count'>0</span> bugz
+				</em> 
+			</p>
+		</div>
 	</header>
 	<article>
 		<form id="add_new" class='pure-form pure-form-stacked bugz-form'>
 			<fieldset>
-				<label for='title'>Add New</label>
-				<input type='text' id='title' />
-				<label for='body'>Description</label>
-				<textarea id='body'></textarea>
+				<input type='text' id='title' placeholder="Type a bug..." />
+				<textarea id='body' placeholder="Describe the bug"></textarea>
 				<button class="pure-button">Submit</button>
 				<a class="close">Close</a>
 			</fieldset>
@@ -40,39 +29,55 @@
 		</ul>
 	</article>
 	<footer>
-		<p> 
-			<em>
-				<span class='bug-count'>0</span> bugz
-			</em> 
-		</p>
+		made with <a href="https://github.com/jacoblwe20/marrow">marrow</a>
 	</footer>
 </div>
 <script>
 	;( function ( app, exports ) {
+		Debug().listenTo( 'app:Menu' ); 
 		var form = new app.Form( $('.bugz-form') );
 		var navBar = new app.NavBar( $('.bugz-header') );
 		var list = new app.List( $('.bugz-list') );
-		Debug().listenTo( 'app:App' ); 
-
+		var menu = new app.Menu( $('.filter'), [
+				{ 
+					text: 'All',
+					filter: 'all' 
+				},
+				{ 
+					text: 'Open', 
+					filter: 'open'
+				},
+				{ 
+					text: 'Done', 
+					filter: 'done'
+				}
+			] );
+		app.on( menu, 'select', app.filterList( ));
 		app.start( $('[data-app]') );
 		app.load([
 			{
 				status: 'open',
 				id: 1,
-				title: 'Hello',
-				body: 'World'
+				title: 'If the text is too long the view does not handle it very well',
+				body: 'This can be fixed by either substringing or css text-overflow'
 			},
 			{
 				status: 'done',
 				id: 2,
-				title: 'Hello',
-				body: 'World'
+				title: 'Get Filters working',
+				body: 'Yeaah'
+			},
+			{
+				status: 'done',
+				id: 3,
+				title: 'Cannot Delete!',
+				body: 'Done bugs. After they are complete it should be easy to just delete them'
 			},
 			{
 				status: 'open',
-				id: 3,
-				title: 'Hello',
-				body: 'World'
+				id: 4,
+				title: 'Show Done bugs at bottom of all',
+				body: 'Its weird just having them in the mix'
 			}
 		]);
 

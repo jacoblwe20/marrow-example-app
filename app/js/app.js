@@ -10,7 +10,7 @@ var app;
 				this.count = 0;
 				this.filter = 'all';
 				this.on( 'bug', function ( event, payload ) {
-					console.log('bug', event, payload)
+					debug.log('bug', event, payload)
 					if ( /:add/.test( event ) ) {
 						_this.count += 1;
 						_this.DS._store( payload );
@@ -28,13 +28,16 @@ var app;
 					}
 					this.updateCount( );
 				} );
-				this.on( 'list:filter', function ( filter ) {
-					debug.log( 'filter', filter );
-					if ( filter ) {
-						_this.DS._find( filter );
-					}
-				} )
 			}, {
+				filterList: function ( ) {
+					var _this = this;
+					return function ( obj ) {
+						var filter = obj.filter;
+						if ( filter ) {
+							_this.DS._find( filter );
+						}
+					}
+				},
 				updateCount: function ( ) {
 					this.$count.text( this.count );
 				},

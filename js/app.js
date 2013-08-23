@@ -1,4 +1,4 @@
-/* marrow-example-app - 0.0.1 1377058718709 */
+/* marrow-example-app - 0.0.1 1377244462904 */
 
 
 /*
@@ -32,7 +32,7 @@ var app;
 				this.count = 0;
 				this.filter = 'all';
 				this.on( 'bug', function ( event, payload ) {
-					console.log('bug', event, payload)
+					debug.log('bug', event, payload)
 					if ( /:add/.test( event ) ) {
 						_this.count += 1;
 						_this.DS._store( payload );
@@ -50,13 +50,16 @@ var app;
 					}
 					this.updateCount( );
 				} );
-				this.on( 'list:filter', function ( filter ) {
-					debug.log( 'filter', filter );
-					if ( filter ) {
-						_this.DS._find( filter );
-					}
-				} )
 			}, {
+				filterList: function ( ) {
+					var _this = this;
+					return function ( obj ) {
+						var filter = obj.filter;
+						if ( filter ) {
+							_this.DS._find( filter );
+						}
+					}
+				},
 				updateCount: function ( ) {
 					this.$count.text( this.count );
 				},
@@ -227,6 +230,10 @@ var app = app || {};
 				_this.addBug( );
 			});
 
+			this.$title.on( 'focus', function ( ) {
+				app.emit( 'form:open' );
+			})
+
 			this.$close.on( 'click', function ( ) {
 				app.emit( 'form:close' );
 			} )
@@ -284,14 +291,12 @@ var app = app || {};
 				this.$el = $list;
 
 				this._listItem = $(' <li/> ').append(
-					'<div class="pure-u-2-3">' +
+					'<div class="pure-u-7-8">' +
 						'<h3></h3>' +
 						'<p></p>' +
 					'</div>' +
-					'<div class="pure-u-1-3 actions">' +
-						'<button class="pure-button bug-delete">Delete</button>' +
-						'<button class="pure-button pure-button-primary bug-complete">Done</button>' +
-					'</div>' 
+					'<a class="bug-delete">⨯</a>' +
+					'<button class="pure-button pure-button-primary bug-complete">Done</button>'
 				);
 
 				app.on( 'bug:add', function( ){
@@ -321,6 +326,90 @@ var app = app || {};
 		);
 
 	app.List = List;
+
+} ( Marrow ) );
+var app = app || {};
+
+;( function ( Marrow ) { 
+	'use strict';
+
+	var debug = Debug( 'app:Menu' ),
+		Menu = Marrow( 
+				function Menu( $link, options ){
+					debug.log( 'Menu' );
+					var _this = this;
+					this.options =  options;
+					this.items = [];
+					this.$link = $link;
+					this.$body = $( 'body' );
+					this.$label = $('<label/>');
+					this.$menu = this.List( options );
+
+					debug.log( 'link', this.$link );
+					debug.log( 'menu', this.$menu );
+
+					// toggles menu
+					this.$link.on( 'click', function ( e ) {
+						e.stopPropagation( );
+						if ( !( _this.getState( ) ) ) {
+							_this.open( );
+						} else {
+							_this.close( );
+						}
+					} );
+
+					this.$body.on( 'click', function ( ) {
+						if ( _this.getState( ) ) {
+							_this.close( );
+						}
+					} );
+
+					this.$menu
+						.appendTo( this.$link
+							.append(
+								this.$label
+									.text( options[ 0 ].text ) 
+							)
+							.addClass( 'menu-link' )
+						)
+						.find( 'li' )
+							.on( 'click', function ( e ) {
+								var i = $( e.target ).data( 'index' );
+								_this.emit( 'select', _this.options[ i ] );
+							});
+
+					this.to( 'open', function ( ) {
+						this.$menu.addClass('show');
+					}, 1 )
+
+					this.to( 'close', function ( ) {
+						this.$menu.removeClass('show');
+					}, 0);
+
+					this.on( 'select', function ( option ) { 
+						this.$label.text( option.text );
+					})
+				}, {
+					Item: function ( option, index ) {
+						return $( '<li/>' ).append( option.text ).attr({
+							'data-index' : index
+						});
+					},
+					List: function ( option ) {
+						var $el = $( '<ul/>' )
+							.addClass( 'menu-list' );
+						for ( var i = 0; i < option.length; i += 1 ) {
+							var $item = this.Item( option[ i ], i );
+							$el.append( $item );
+						}
+
+						debug.log( $el );
+						return $el;
+					}
+				}
+			);
+
+	app.Menu = Menu;
 
 } ( Marrow ) );
 var app = app || {};

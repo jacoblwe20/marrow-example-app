@@ -17,6 +17,10 @@ var app = app || {};
 				_this.addBug( );
 			});
 
+			this.$title.on( 'focus', function ( ) {
+				app.emit( 'form:open' );
+			})
+
 			this.$close.on( 'click', function ( ) {
 				app.emit( 'form:close' );
 			} )
