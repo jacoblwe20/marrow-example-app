@@ -1,0 +1,26 @@
+[
+	{
+		"status": "open",
+		"id": 1,
+		"title": "If the text is too long the view does not handle it very well",
+		"body": "This can be fixed by either substringing or css text-overflow"
+	},
+	{
+		"status": "done",
+		"id": 2,
+		"title": "Get Filters working",
+		"body": "Yeaah"
+	},
+	{
+		"status": "done",
+		"id": 3,
+		"title": "Cannot Delete!",
+		"body": "Done bugs. After they are complete it should be easy to just delete them"
+	},
+	{
+		"status": "open",
+		"id": 4,
+		"title": "Show Done bugs at bottom of all",
+		"body": "Its weird just having them in the mix"
+	}
+]

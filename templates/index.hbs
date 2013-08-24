@@ -1,0 +1,62 @@
+<!doctype html>
+<title>Marrow Test App</title>
+<link href='/css/app.css?q={{ts}}' rel='stylesheet' type='text/css' />
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src='/js/app.js?q={{ts}}'></script>
+<h1>Bugz.</h1>
+<div data-app="bugz" class="bugz-app">
+	<header class='bugz-header pure-g'>
+		<div class="pure-u-2-3">
+			<div class="filter"></div>
+		</div>
+		<div class="pure-u-1-3 bug-counter">
+			<p> 
+				<em>
+					<span class='bug-count'>0</span> bugz
+				</em> 
+			</p>
+		</div>
+	</header>
+	<article>
+		<form id="add_new" class='pure-form pure-form-stacked bugz-form'>
+			<fieldset>
+				<input type='text' id='title' placeholder="Type a bug..." />
+				<textarea id='body' placeholder="Describe the bug"></textarea>
+				<button class="pure-button pure-button-primary">Submit</button>
+				<a class="close">⨯</a>
+			</fieldset>
+		</form>
+		<ul class="bugz-list">
+		</ul>
+	</article>
+	<footer>
+		{{{link}}}
+	</footer>
+</div>
+<script>
+	;( function ( app, exports ) {
+		Debug().listenTo( {{DEBUG}} ); 
+		var form = new app.Form( $('.bugz-form') );
+		var navBar = new app.NavBar( $('.bugz-header') );
+		var list = new app.List( $('.bugz-list') );
+		var menu = new app.Menu( $('.filter'), [
+				{ 
+					text: 'All',
+					filter: 'all' 
+				},
+				{ 
+					text: 'Open', 
+					filter: 'open'
+				},
+				{ 
+					text: 'Done', 
+					filter: 'done'
+				}
+			] );
+		app.set({{{json config}}});
+		app.on( menu, 'select', app.filterList( ));
+		app.start( $('[data-app]') );
+		app.load({{{json Data}}});
+
+	} ( app, this ) );
+</script>
