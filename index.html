@@ -1,8 +1,8 @@
 <!doctype html>
 <title>Marrow Test App</title>
-<link href='/css/app.css' rel='stylesheet' type='text/css' />
+<link href='/css/app.css?q=1377367483288' rel='stylesheet' type='text/css' />
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src='/js/app.js'></script>
+<script src='/js/app.js?q=1377367483288'></script>
 <h1>Bugz.</h1>
 <div data-app="bugz" class="bugz-app">
 	<header class='bugz-header pure-g'>
@@ -35,7 +35,7 @@
 </div>
 <script>
 	;( function ( app, exports ) {
-		Debug().listenTo( 'app:Menu' ); 
+		Debug().listenTo( app ); 
 		var form = new app.Form( $('.bugz-form') );
 		var navBar = new app.NavBar( $('.bugz-header') );
 		var list = new app.List( $('.bugz-list') );
@@ -53,34 +53,10 @@
 					filter: 'done'
 				}
 			] );
+		app.set({"appName":"marrow-example-app","version":"0.0.1"});
 		app.on( menu, 'select', app.filterList( ));
 		app.start( $('[data-app]') );
-		app.load([
-			{
-				status: 'open',
-				id: 1,
-				title: 'If the text is too long the view does not handle it very well',
-				body: 'This can be fixed by either substringing or css text-overflow'
-			},
-			{
-				status: 'done',
-				id: 2,
-				title: 'Get Filters working',
-				body: 'Yeaah'
-			},
-			{
-				status: 'done',
-				id: 3,
-				title: 'Cannot Delete!',
-				body: 'Done bugs. After they are complete it should be easy to just delete them'
-			},
-			{
-				status: 'open',
-				id: 4,
-				title: 'Show Done bugs at bottom of all',
-				body: 'Its weird just having them in the mix'
-			}
-		]);
+		app.load([{"status":"open","id":1,"title":"If the text is too long the view does not handle it very well","body":"This can be fixed by either substringing or css text-overflow"},{"status":"done","id":2,"title":"Get Filters working","body":"Yeaah"},{"status":"done","id":3,"title":"Cannot Delete!","body":"Done bugs. After they are complete it should be easy to just delete them"},{"status":"open","id":4,"title":"Show Done bugs at bottom of all","body":"Its weird just having them in the mix"}]);
 
 	} ( app, this ) );
 </script>

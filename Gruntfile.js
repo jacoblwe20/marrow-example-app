@@ -1,3 +1,11 @@
+var confg = require('confg').init( );
+	Handlebars = require('handlebars'),
+	fs = require('fs');
+
+	Handlebars.registerHelper('json', function ( object ) {
+		return JSON.stringify( object );
+	})
+
 module.exports = function(grunt) {
 	// Project configuration.
 	grunt.initConfig({
@@ -39,6 +47,13 @@ module.exports = function(grunt) {
         		options: {
           			interrupt: false
         		}
+      		},
+      		precompile: {
+        		files:  'templates/*.hbs',
+        		tasks: ['precompile'],
+        		options: {
+          			interrupt: false
+        		}
       		}
 		},
 		connect: {
@@ -68,9 +83,31 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-sass');
 
 
+	grunt.registerTask(
+		'precompile', 
+		'Precompiles index file for ' + 
+		'better configurations',
+		function ( ) { 
+			var file = fs.readFileSync( 'templates/index.hbs' );
+			var template = Handlebars.compile( file.toString() );
+			var result = template( {
+				Data: require( './data/bugz.json' ),
+				DEBUG: process.env.DEBUG,
+				config: {
+					appName: process.env.NAME,
+					version: process.env.VERSION
+				},
+				ts: process.env.APPSTARTUP,
+				link: 'made with <a href="https://github.com/jacoblwe20/marrow">marrow</a>'
+			} );
+
+			fs.writeFileSync('./index.html', result );
+			grunt.log.writeln('file index.html created');
+		}
+	)
 
 
-	grunt.registerTask('compile', ['sass', 'concat']);
+	grunt.registerTask('compile', ['precompile', 'sass', 'concat']);
 
 	// Run the server and watch for file changes
 	grunt.registerTask('server', [ 'compile', 'concurrent' ]);

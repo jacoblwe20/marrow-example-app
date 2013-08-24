@@ -55,6 +55,12 @@ var app;
 				},
 				load: function( ){
 					this.DS.load.apply( this.DS, arguments );
+				},
+				set: function ( config ) {
+					this.config = app.merge( 
+						this.config || {}, 
+						config || {} 
+					);
 				}
 			}
 		);

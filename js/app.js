@@ -1,4 +1,4 @@
-/* marrow-example-app - 0.0.1 1377316356622 */
+/* marrow-example-app - 0.0.1 1377367095671 */
 
 
 /*
@@ -77,6 +77,12 @@ var app;
 				},
 				load: function( ){
 					this.DS.load.apply( this.DS, arguments );
+				},
+				set: function ( config ) {
+					this.config = app.merge( 
+						this.config || {}, 
+						config || {} 
+					);
 				}
 			}
 		);
