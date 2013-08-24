@@ -1,18 +1,33 @@
 @import 'lib/purecss';
 @import url(http://fonts.googleapis.com/css?family=Roboto);
+@import 'mixin/css3';
 
 $ltGrey: #f2f2f2;
 $grey : #ddd;
 $gray : #e6e6e6;
 $dkGrey : #c4c4c4;
 $black: #444;
-$white : #fefefe;
+$white : #fcfcfc;
 $blue : #0078e7;
+$ltBlue : lighten( $blue, 5% );
+$drkBlue : darken( $blue, 5% );
+$llBlue : lighten( $ltBlue, 10% );
+
+
 
 body{
 	font-family: 'Roboto';
-	background: $ltGrey;
+	background: $blue;
 	color: $black;
+	overflow-y: scroll;
+}
+
+h1{
+	text-align: center;
+	color: $llBlue;
+	text-shadow: 0px 1px 2px rgba( 0, 0, 0, .3 );
+	font-size: 50px;
+	margin: 0;
 }
 
 .right{
@@ -23,8 +38,7 @@ body{
 	max-width: 30em;
 	margin: 1em auto;
 	background: $white;
-	overflow: hidden;
-	box-shadow: 0 .25em .25em rgba( 0, 0, 0, .15 );
+	box-shadow: 0px 0px 3px rgba( 0, 0, 0, .3 );
 } 
 
 .menu-link{
@@ -33,7 +47,7 @@ body{
 	min-width: 10em;
 	padding: 1em 1.5em;
 	display: inline-block;
-	background: $dkGrey;
+	background: $drkBlue;
 	color: #fff;
 	border: 0;
 	outline: none;
@@ -57,6 +71,10 @@ body{
 			padding: .75em 1em;
 			&:hover{
 				background: $ltGrey;
+				&:active{
+					background: $blue;
+					color: $white;
+				}
 			}
 		}
 		&.show{
@@ -69,18 +87,19 @@ body{
 		right: 1.5em;
 		top: 1em;
 		content: "\25BC";
+		color: $llBlue;
 
 	}
 }
 
 
 header.bugz-header{
-	background: $gray;
+	background: $ltBlue;
 	.bug-counter{
 		p{
 			padding: 0 1.5em 0 0;
 			display: inline-block;
-			color: $dkGrey;
+			color: $drkBlue;
 			text-align: right;
 		}
 		text-align: right;
@@ -88,24 +107,33 @@ header.bugz-header{
 }
 article{
 	form.pure-form{
-
+		@include transition( all .5s );
+		background: $white;
+		max-height: 55px;
 		margin: 0px;
+		position: relative;
 		&.show{
 			max-height: 300px;
 			height: auto;
-			padding: 1.5em;
-			border-bottom: 1px solid $dkGrey;
-			position: relative;
+			padding: 3em 1.5em 0;
+			border-bottom: 1px solid $gray;
 			textarea{
 				padding: 1.5em!important;
 				height: auto;
 				min-height: 100%!important;
 				border-width: 1px;
 				margin: 2em 0!important;
-			}
-			button, .close{
 				opacity: 1;
-				display: inline-block;
+			}
+			button{
+				max-height: 99px;
+				height: auto;
+				padding: 0.5em 1.5em;
+				opacity: 1;
+			}
+			.close{
+				@include transition( all .5s linear .5s );
+				opacity: 1;
 			}
 		}
 
@@ -116,6 +144,8 @@ article{
 			padding: 1.5em!important;
 		}
 		textarea{
+			@include transition( all .5s );
+			opacity: 0;
 			padding: 0!important;
 			height: 0;
 			min-height: 0px!important;
@@ -130,11 +160,21 @@ article{
 			min-height: 2em;
 		}
 		button{
+			@include transition( all .5s );
 			float: right;
-		}
-		button, .close{
+			max-height: 0;
+			height: 0;
+			padding: 0;
 			opacity: 0;
-			display: none;
+		}
+		.close{
+			cursor: pointer;
+			position: absolute;
+			top: 0;
+			right: .25em;
+			font-size: 2em;
+			@include transition( all .1s );
+			opacity: 0;
 		}
 	}
 	ul{
@@ -142,9 +182,9 @@ article{
 		padding: 0;
 		margin: 0;
 		li{
-			border-left: .5em solid $blue;
-			padding: 1.5em!important;
-			border-bottom: 1px solid $blue;
+			@include transition( all .5s );
+			border-bottom: 1px solid $gray;
+			padding: 1.5em 1.5em 3em!important;
 			position: relative;
 			h3, p{
 				padding: .5em 0;
@@ -164,14 +204,14 @@ article{
 			}
 
 			.bug-delete{
+				cursor: pointer;
 				position: absolute;
-				top: 1em;
-				right: 1em;
+				top: 0;
+				right: .25em;
 				font-size: 2em;
 			}
 			&.done{
-				border-left: .5em solid $dkGrey;
-				border-bottom: 1px solid $dkGrey;
+				border-left: .5em solid $gray;
 				color: $grey;
 				background: $ltGrey;
 				p, .bug-complete{
@@ -185,11 +225,13 @@ article{
 
 footer{
 	text-align: center;
-	color: $grey;
+	color: $white;
 	font-size: .75em;
 	padding: .75em;
+	background: $drkBlue;
+	color: $white;
 	a{
-		color: $blue;
+		color: $llBlue;
 		text-decoration: none;
 	}
 }

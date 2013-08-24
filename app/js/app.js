@@ -18,9 +18,11 @@ var app;
 						_this.count -= 1;
 						_this.DS._updateStatus( 'done', payload );
 					} else if ( /:done|:del/.test( event ) ) {
-						_this.count -= 1;
 						debug.log( event );
 						_this.DS._updateStatus( event.split(':')[1], payload );
+						if ( /:del/.test( event ) ) {
+							_this.count -= 1;							
+						}
 
 					} else if ( /:load/.test( event ) ) {
 						// reset count
