@@ -104,7 +104,7 @@ module.exports = function(grunt) {
 			fs.writeFileSync('./index.html', result );
 			grunt.log.writeln('file index.html created');
 		}
-	)
+	);
 
 
 	grunt.registerTask('compile', ['precompile', 'sass', 'concat']);
