@@ -1,5 +1,7 @@
 ### Marrow Example App
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/jcblw/marrow-example-app.svg)](https://greenkeeper.io/)
+
 This is a test app for [Marrow.js](https://github.com/jacoblwe20/marrow).
 
 ## Start up
